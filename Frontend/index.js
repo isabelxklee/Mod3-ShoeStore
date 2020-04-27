@@ -12,7 +12,7 @@ const mainShoeName = mainShoe.querySelector('#shoe-name')
 const mainShoeDescription = mainShoe.querySelector('#shoe-description')
 const mainShoePrice = mainShoe.querySelector('#shoe-price')
 
-reviewForm.addEventListener('submit', (event) => submitReview(event))
+// reviewForm.addEventListener('submit', (event) => submitReview(shoe, event))
 
 fetch(shoesURL)
     .then(r => r.json())
@@ -90,6 +90,8 @@ function selectShoe(shoe, shoesArray) {
             displayReviews(shoe, shoesArray)
         }
     })
+
+    reviewForm.addEventListener('submit', (event) => submitReview(shoe, event))
 }
 
 // steps:
@@ -111,20 +113,26 @@ function displayReviews(shoe, shoesArray) {
     })
 }
 
-// last deliverable!!!!
-// let the user fill out the new review form
-// save the new review info on the backend and display on the frontend
+function inputFieldResults(){
+    const inputField = reviewForm.querySelector('#review-content')
 
-function reviewFormInputs() {
     return {
-        content: event.target.content.value
+        id: 50,
+        content: inputField.innerText
     }
 }
 
-function submitReview(event) {
+function submitReview(shoe, event) {
     event.preventDefault();
-        // let newReview = reviewFormInputs();
-        
-        // console.log(event.target)
-        // console.log(newReview)
+    let newReview = inputFieldResults()
+
+    fetch(`http://localhost:3000/shoes/${shoe.id}/reviews`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newReview),
+    })
+        .then(r => r.json())
+        // .then(console.log)
 }
